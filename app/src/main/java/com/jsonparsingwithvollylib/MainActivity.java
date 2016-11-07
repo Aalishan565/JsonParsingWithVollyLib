@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnHitMe;
     private Button mBtnLoadList;
     private ListView mListViewData;
-    ProgressDialog pDialog;
+    private ProgressDialog pDialog;
     private String TAG = "MainActivity";
     private String url = "http://jsonparsing.parseapp.com/jsonData/moviesDemoItem.txt";
     private String urlforList = "http://jsonparsing.parseapp.com/jsonData/moviesDemoList.txt";
-    RequestQueue requestQueue;
-    List<MovieModel> mListMovieModel;
-    MovieModel mMovieModel;
-    CustomListAdapter mCustomListAdapter;
+    private RequestQueue requestQueue;
+    private List<MovieModel> mListMovieModel;
+    private MovieModel mMovieModel;
+    private CustomListAdapter mCustomListAdapter;
 
 
     @Override
@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListMovieModel = new ArrayList<>();
-
-        requestQueue = VollySingleTon.getInstance().getRequestQueue();
+        requestQueue = VollySingleton.getInstance().getRequestQueue();
         pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setMessage("loading...");
         mTvJsonData = (TextView) findViewById(R.id.tv_json_data);
         mBtnHitMe = (Button) findViewById(R.id.btn_hit);
         mBtnLoadList = (Button) findViewById(R.id.btn_load_list);
@@ -53,22 +53,21 @@ public class MainActivity extends AppCompatActivity {
         mBtnHitMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pDialog.setMessage("loading..");
+
                 pDialog.show();
-                callWebService();
+                callSingleObjectLoadDataService();
             }
         });
         mBtnLoadList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pDialog.setMessage("loading..");
                 pDialog.show();
-                callListDataToLoad();
+                callListDataLoadService();
             }
         });
     }
 
-    private void callListDataToLoad() {
+    private void callListDataLoadService() {
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(jsonObjReq);
     }
 
-    private void callWebService() {
+    private void callSingleObjectLoadDataService() {
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
